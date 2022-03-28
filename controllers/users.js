@@ -3,6 +3,8 @@ const {
   ERROR_400,
   ERROR_404,
   ERROR_500,
+  JWT_SECRET,
+  SALT_ROUNDS,
 } = require('../utils/constants');
 
 const bcrypt = require('bcrypt');
@@ -36,38 +38,45 @@ module.exports.getUserById = (req, res) => {
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email }, '+password')
     .then(user => {
       if(!user) {
         throw new Error('Такого пользователя не существует');
       }
-      return bcrypt.compare(password, user.password)
+      return bcrypt.compare(password, user.password);
     })
     .then(isValid => {
       if (!isValid) {
         throw new Error('Неправильный логин или пароль');
       }
-      const token = jwt.sign({ user._id }, 'SECRET_CODE');
-      res.send({ jwt: token });
+      const token = jwt.sign(
+        { _id: user._id },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+      res.send({ token });
     })
     .catch(err => {
-      console.log(err);
+      next(err);
     })
 }
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
   User.findOne({email})
     .then(user => {
       if(user) {
         throw new Error('Пользователь с таким e-mail уже зарегистрирован');
       }
-      return bcrypt.hash(password, 10);
+      return bcrypt.hash(password, SALT_ROUNDS);
     })
     .then(hash => {
       return User.create({ name, about, avatar, email, password: hash });
+    })
+    .then(user => {
+      return User.findOne({ _id: user._id });
     })
     .then((user) => res.send({ user }))
     .catch((err) => {
