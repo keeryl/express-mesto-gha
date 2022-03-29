@@ -27,14 +27,24 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCardById = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => {
+  Card.findById(req.params.cardId)
+    .then(card => {
       if (!card) {
         return res.status(ERROR_404).send({
           message: 'Карточка с указанным id не найдена.',
         });
       }
-      return res.send({ card });
+      return card;
+    })
+    .then(card => {
+      if (req.user._id === card.owner) {
+        return Card.findByIdAndRemove(card._id);
+      } else {
+        throw new Error('Карточка не принадлежит пользователю');
+      }
+    })
+    .then(deletedCard => {
+      return res.send({ deletedCard });
     })
     .catch((err) => {
       if (err.name === 'CastError') {

@@ -1,14 +1,16 @@
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
   ERROR_400,
+  ERROR_401,
+  ERROR_403,
   ERROR_404,
+  ERROR_409,
   ERROR_500,
   JWT_SECRET,
   SALT_ROUNDS,
 } = require('../utils/constants');
-
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -38,46 +40,59 @@ module.exports.getUserById = (req, res) => {
     });
 };
 
-module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
-  User.findOne({ email }, '+password')
+module.exports.getCurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
     .then(user => {
-      if(!user) {
-        throw new Error('Такого пользователя не существует');
+      if (!user) {
+        throw new Error('Не удалось найти текущего пользователя');
       }
-      return bcrypt.compare(password, user.password);
-    })
-    .then(isValid => {
-      if (!isValid) {
-        throw new Error('Неправильный логин или пароль');
-      }
-      const token = jwt.sign(
-        { _id: user._id },
-        JWT_SECRET,
-        { expiresIn: '7d' }
-      );
-      res.send({ token });
+      return res.send({ user });
     })
     .catch(err => {
       next(err);
     })
 }
 
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findOne({ email }, '+password')
+    .then((user) => {
+      if (!user) {
+        throw new Error('Такого пользователя не существует');
+      }
+      return bcrypt.compare(password, user.password);
+    })
+    .then((isValid) => {
+      if (!isValid) {
+        throw new Error('Неправильный логин или пароль');
+      }
+      const token = jwt.sign(
+        { _id: user._id },
+        JWT_SECRET,
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
-  User.findOne({email})
-    .then(user => {
-      if(user) {
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
         throw new Error('Пользователь с таким e-mail уже зарегистрирован');
       }
       return bcrypt.hash(password, SALT_ROUNDS);
     })
-    .then(hash => {
-      return User.create({ name, about, avatar, email, password: hash });
-    })
-    .then(user => {
-      return User.findOne({ _id: user._id });
-    })
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
+    .then((user) => User.findOne({ _id: user._id }))
     .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {

@@ -13,8 +13,6 @@ const auth = require('./middlewares/auth');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false
 });
 
 app.use(bodyParser.json());
