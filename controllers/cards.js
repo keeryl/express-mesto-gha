@@ -21,22 +21,19 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCardById = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .then(card => {
+    .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным id не найдена.');
       }
       return card;
     })
-    .then(card => {
+    .then((card) => {
       if (req.user._id === card.owner) {
         return Card.findByIdAndRemove(card._id);
-      } else {
-        throw new ConflictError('Карточка не принадлежит пользователю');
       }
+      throw new ConflictError('Карточка не принадлежит пользователю');
     })
-    .then(deletedCard => {
-      return res.send({ deletedCard });
-    })
+    .then((deletedCard) => res.send({ deletedCard }))
     .catch(next);
 };
 

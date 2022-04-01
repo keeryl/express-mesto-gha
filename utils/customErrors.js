@@ -1,10 +1,10 @@
 const {
   ERROR_400,
   ERROR_401,
-  ERROR_403,
+  // ERROR_403,
   ERROR_404,
-  ERROR_409,
-} = require('./utils/constants');
+  // ERROR_409,
+} = require('./constants');
 
 class ConflictError extends Error {
   constructor(message) {
@@ -31,4 +31,4 @@ module.exports = {
   ConflictError,
   NotFoundError,
   AuthError,
-}
+};

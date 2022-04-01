@@ -31,14 +31,14 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .then(user => {
+    .then((user) => {
       if (!user) {
         throw new NotFoundError('Не удалось найти текущего пользователя.');
       }
       return res.send({ user });
     })
     .catch(next);
-}
+};
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;

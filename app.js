@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const cardsRouter = require('./routes/cards');
 const usersRouter = require('./routes/users');
 
@@ -8,7 +9,8 @@ const app = express();
 const { PORT = 3000 } = process.env;
 
 const { login, createUser } = require('./controllers/users');
-const errorHandler = require('./middlewares/errorHandler');
+const validation = require('./middlewares/validation');
+const { errorHandler } = require('./middlewares/errorHandler');
 const auth = require('./middlewares/auth');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -16,14 +18,16 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(bodyParser.json());
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', validation.login, login);
+app.post('/signup', validation.createUser, createUser);
 app.use(auth);
 app.use('/cards', cardsRouter);
 app.use('/users', usersRouter);
 app.use((req, res) => {
   res.status(404).send({ message: 'Запрошенный роут не существует' });
 });
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT);
+console.log('APP IS LISTENING');

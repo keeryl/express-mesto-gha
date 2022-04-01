@@ -1,7 +1,7 @@
 const {
   ERROR_409,
   ERROR_500,
-} = require('./utils/constants');
+} = require('../utils/constants');
 
 module.exports.errorHandler = (err, req, res, next) => {
   console.log(err.stack || err);

@@ -1,6 +1,12 @@
+const jwt = require('bcrypt');
+
 const {
   JWT_SECRET,
 } = require('../utils/constants');
+
+const {
+  AuthError,
+} = require('../utils/customErrors');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -18,10 +24,8 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
+    err = new AuthError('Необходима авторизация');
     next(err);
-    // return res
-    //   .status(401)
-    //   .send({ message: 'Необходима авторизация' });
   }
 
   req.user = payload;
