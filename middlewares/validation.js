@@ -1,7 +1,7 @@
 const { celebrate, Joi, Segments } = require('celebrate');
 const validator = require('validator');
 
-const login = () => {
+const login = (req, res, next) => {
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       email: Joi.string().required().custom((value, helper) => {
@@ -19,19 +19,21 @@ const login = () => {
           'string.min': 'Пароль должен быть не менее 6 символов',
         }),
     }),
-  }).unknown(true);
+  });
+  next();
 };
 
-const createUser = () => {
+const createUser = (req, res, next) => {
   celebrate({
-    body: Joi.object().keys({
+    [Segments.BODY]: Joi.object().keys({
       name: Joi.string().min(2).max(18),
       about: Joi.string().min(2).max(30),
       avatar: Joi.string().min(2).max(30),
       email: Joi.string().required().email(),
       password: Joi.number().required().integer().min(6),
     }),
-  }).unknown(true);
+  });
+  next();
 };
 
 module.exports = {

@@ -47,9 +47,10 @@ module.exports.login = (req, res, next) => {
       if (!user) {
         throw new NotFoundError(`Пользователь ${email} не зарегистрирован`);
       }
-      return bcrypt.compare(password, user.password);
+      const isValid = bcrypt.compare(password, user.password);
+      return { user, isValid };
     })
-    .then((isValid) => {
+    .then(({ user, isValid }) => {
       if (!isValid) {
         throw new AuthError('Неправильный логин или пароль');
       }
@@ -58,7 +59,7 @@ module.exports.login = (req, res, next) => {
         JWT_SECRET,
         { expiresIn: '7d' },
       );
-      res.send({ token });
+      return res.send({ token });
     })
     .catch(next);
 };
