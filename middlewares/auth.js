@@ -21,13 +21,12 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verifySync(token, JWT_SECRET);
+    payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
     // err = new ForbiddenError('Доступ запрещён. Необходима авторизация');
     return next(new ForbiddenError('Доступ запрещён. Необходима авторизация'));
   }
   req.user = payload;
-  console.log(req.user);
 
   return next();
 };
