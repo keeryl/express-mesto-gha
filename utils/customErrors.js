@@ -1,15 +1,15 @@
 const {
-  ERROR_400,
+  // ERROR_400,
   ERROR_401,
-  // ERROR_403,
+  ERROR_403,
   ERROR_404,
-  // ERROR_409,
+  ERROR_409,
 } = require('./constants');
 
 class ConflictError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = ERROR_400;
+    this.statusCode = ERROR_409;
   }
 }
 
@@ -17,6 +17,13 @@ class AuthError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = ERROR_401;
+  }
+}
+
+class ForbiddenError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = ERROR_403;
   }
 }
 
@@ -31,4 +38,5 @@ module.exports = {
   ConflictError,
   NotFoundError,
   AuthError,
+  ForbiddenError,
 };

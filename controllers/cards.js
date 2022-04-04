@@ -3,6 +3,7 @@ const Card = require('../models/card');
 const {
   NotFoundError,
   ConflictError,
+  ForbiddenError,
 } = require('../utils/customErrors');
 
 module.exports.getCards = (req, res, next) => {
@@ -28,10 +29,10 @@ module.exports.deleteCardById = (req, res, next) => {
       return card;
     })
     .then((card) => {
-      if (req.user._id === card.owner) {
-        return Card.findByIdAndRemove(card._id);
+      if (req.user._id !== card.owner) {
+        throw new ForbiddenError('Карточка не принадлежит пользователю');
       }
-      throw new ConflictError('Карточка не принадлежит пользователю');
+      return Card.findByIdAndRemove(card._id);
     })
     .then((deletedCard) => res.send({ deletedCard }))
     .catch(next);

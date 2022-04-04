@@ -45,9 +45,9 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }, '+password')
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(`Пользователь ${email} не зарегистрирован`);
+        throw new AuthError(`Пользователь ${email} не зарегистрирован`);
       }
-      const isValid = bcrypt.compare(password, user.password);
+      const isValid = bcrypt.compareSync(password, user.password);
       return { user, isValid };
     })
     .then(({ user, isValid }) => {
