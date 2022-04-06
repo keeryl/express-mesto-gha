@@ -2,7 +2,6 @@ const Card = require('../models/card');
 
 const {
   NotFoundError,
-  ConflictError,
   ForbiddenError,
 } = require('../utils/customErrors');
 
