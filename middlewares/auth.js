@@ -6,7 +6,7 @@ const {
 
 const {
   AuthError,
-  ForbiddenError,
+  // ForbiddenError,
 } = require('../utils/customErrors');
 
 module.exports = (req, res, next) => {
@@ -23,8 +23,9 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return next(new ForbiddenError('Доступ запрещён. Необходима авторизация')); // я запутался - сейчас в этой строке возвращается ошибка со статусом 403
-    // return next(new AuthError('Доступ запрещён. Необходима авторизация'));
+    // return next(new ForbiddenError('Доступ запрещён. Необходима авторизация'));
+    // я запутался - сейчас в строке ниже возвращается ошибка со статусом 401
+    return next(new AuthError('Доступ запрещён. Необходима авторизация'));
   }
   req.user = payload;
 
