@@ -47,7 +47,7 @@ module.exports.login = (req, res, next) => {
       if (!user) {
         throw new AuthError(`Пользователь ${email} не зарегистрирован`);
       }
-      const isValid = bcrypt.compareSync(password, user.password);
+      const isValid = bcrypt.compareSync(password.toString(), user.password);
       return { user, isValid };
     })
     .then(({ user, isValid }) => {
@@ -73,11 +73,13 @@ module.exports.createUser = (req, res, next) => {
       if (user) {
         throw new ConflictError('Пользователь с таким e-mail уже зарегистрирован');
       }
-      return bcrypt.hash(password, SALT_ROUNDS);
+      return bcrypt.hash(password.toString(), SALT_ROUNDS);
     })
-    .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
-    }))
+    .then((hash) => {
+      return User.create({
+        name, about, avatar, email, password: hash,
+      })
+    })
     .then((user) => User.findOne({ _id: user._id }))
     .then((user) => res.send({ user }))
     .catch(next);
