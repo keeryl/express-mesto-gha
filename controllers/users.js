@@ -75,11 +75,9 @@ module.exports.createUser = (req, res, next) => {
       }
       return bcrypt.hash(password.toString(), SALT_ROUNDS);
     })
-    .then((hash) => {
-      return User.create({
-        name, about, avatar, email, password: hash,
-      })
-    })
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((user) => User.findOne({ _id: user._id }))
     .then((user) => res.send({ user }))
     .catch(next);
