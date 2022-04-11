@@ -20,7 +20,7 @@ const loginSchema = {
   }),
 };
 
-const UserSchema = {
+const userSchema = {
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
@@ -37,10 +37,10 @@ const UserSchema = {
   }),
 };
 
-const CardSchema = {
+const cardSchema = {
   [Segments.BODY]: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string().custom((value, helper) => {
+    name: Joi.string().required().min(2).max(30),
+    link: Joi.string().required().custom((value, helper) => {
       if (!validator.isURL(value, { require_protocol: true })) {
         return helper.error('string.notURL');
       }
@@ -51,26 +51,26 @@ const CardSchema = {
   }),
 };
 
-const UserIdSchema = {
+const userIdSchema = {
   [Segments.PARAMS]: Joi.object().keys({
     userId: Joi.string().required().length(24).hex(),
   }),
 };
 
-const CardIdSchema = {
+const cardIdSchema = {
   [Segments.PARAMS]: Joi.object().keys({
     cardId: Joi.string().required().length(24).hex(),
   }),
 };
 
-const UserProfileSchema = {
+const userProfileSchema = {
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
   }),
 };
 
-const UserAvatarSchema = {
+const userAvatarSchema = {
   [Segments.BODY]: Joi.object().keys({
     avatar: Joi.string().custom((value, helper) => {
       if (!validator.isURL(value, { require_protocol: true })) {
@@ -84,11 +84,11 @@ const UserAvatarSchema = {
 };
 
 module.exports = {
-  UserSchema,
+  userSchema,
   loginSchema,
-  UserIdSchema,
-  UserProfileSchema,
-  UserAvatarSchema,
-  CardIdSchema,
-  CardSchema,
+  userIdSchema,
+  userProfileSchema,
+  userAvatarSchema,
+  cardIdSchema,
+  cardSchema,
 };

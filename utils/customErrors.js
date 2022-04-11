@@ -1,8 +1,7 @@
 const {
-  ERROR_400,
   ERROR_401,
   ERROR_403,
-  // ERROR_404,
+  ERROR_404,
   ERROR_409,
 } = require('./constants');
 
@@ -30,7 +29,7 @@ class ForbiddenError extends Error {
 class NotFoundError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = ERROR_400;
+    this.statusCode = ERROR_404;
   }
 }
 

@@ -10,7 +10,7 @@ const { PORT = 3000 } = process.env;
 
 const { login, createUser } = require('./controllers/users');
 const {
-  UserSchema,
+  userSchema,
   loginSchema,
 } = require('./middlewares/validation');
 const { errorHandler } = require('./middlewares/errorHandler');
@@ -25,7 +25,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(bodyParser.json());
 app.use(requestLogger);
 app.post('/signin', celebrate(loginSchema), login);
-app.post('/signup', celebrate(UserSchema), createUser);
+app.post('/signup', celebrate(userSchema), createUser);
 app.use(auth);
 app.use('/cards', cardsRouter);
 app.use('/users', usersRouter);
