@@ -1,11 +1,10 @@
 # Express-mesto-gha
 
 
-## Директории
+## Description
 
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки   
-`/models` — папка с файлами описания схем пользователя и карточки  
+This is API for project Mesto build on Node.js, Express.js, MongoDB and Mongoose.js
+ 
   
 ## Run Locally
 
