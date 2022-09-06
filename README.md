@@ -8,5 +8,5 @@ This is API for project Mesto build on Node.js, Express.js, MongoDB and Mongoose
   
 ## Run Locally
 
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+`npm run start` — run server  
+`npm run dev` — run server with hot-reload
