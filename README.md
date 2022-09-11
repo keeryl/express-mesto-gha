@@ -5,7 +5,7 @@
 
 ## Description
 
-This is API for project Mesto build on Node.js, Express.js, MongoDB and Mongoose.js
+This is REST API for project React-masto-auth (https://github.com/keeryl/react-mesto-auth) build on Node.js, Express.js, MongoDB and Mongoose.js. Registration and authorization features were added.
 
 ## Features
 
@@ -24,7 +24,56 @@ This is API for project Mesto build on Node.js, Express.js, MongoDB and Mongoose
 – Error logging
  
   
-## Run Locally
+## Running Locally
 
-`npm run start` — run server  
-`npm run dev` — run server with hot-reload
+Clone the project
+
+```bash
+  git clone https://github.com/keeryl/https://github.com/keeryl/express-mesto-gha.git
+```
+
+Go to the project directory
+
+```bash
+  cd express-mesto-gha
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start project with
+```bash
+  npm run dev
+```
+
+## Project Dependencies
+
+– "bcrypt": "^5.0.1"
+
+– "body-parser": "^1.19.1"
+    
+– "celebrate": "^15.0.1"
+    
+– "express": "^4.17.2"
+   
+– "express-winston": "^4.2.0"
+    
+– "jsonwebtoken": "^8.5.1"
+    
+– "mongoose": "^6.2.9"
+    
+– "validator": "^13.7.0"
+
+– "winston": "^3.7.2"
+    
+– "eslint": "^8.6.0"
+    
+– "eslint-config-airbnb-base": "^15.0.0"
+    
+– "eslint-plugin-import": "^2.25.4"
+    
+– "nodemon": "^2.0.15"
+
